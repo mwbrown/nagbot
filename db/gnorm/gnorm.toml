@@ -1,0 +1,73 @@
+# This is the connection string for your database
+ConnStr = "dbname=$NAGBOT_PGSQL_DB host=$NAGBOT_PGSQL_HOST port=$NAGBOT_PGSQL_PORT user=$NAGBOT_PGSQL_USER password=$NAGBOT_PGSQL_PASS sslmode=disable"
+
+DBType = "postgres"
+
+Schemas = ["public"]
+
+PostRun = ["goimports", "-w", "$GNORMFILE"]
+
+NameConversion = "{{pascal .}}"
+
+# This will output the files in a subdirectory called "gnorm".  You can change
+# this, but if you do, change the RootPkg definition below to match what the
+# package name should be.
+OutputDir = "../nbsql"
+
+StaticDir = ""
+
+[Params]
+# RootPkg is the package declaration for the output dir. It should match the
+# directory name above. You may change this as appropriate.
+RootPkg = "nbsql"
+
+# RootImport is the import path for the output directory.
+RootImport = "github.com/mwbrown/nagbot/db/nbsql"
+
+[SchemaPaths]
+"fields.go" = "templates/fields.gotmpl"
+"db.go" = "templates/db.gotmpl"
+
+[TablePaths]
+"{{toLower .Table}}/{{toLower .Table}}.go" = "templates/table.gotmpl"
+
+[EnumPaths]
+"enum/{{toLower .Enum}}.go" = "templates/enum.gotmpl"
+
+[TypeMap]
+"timestamp with time zone" = "time.Time"
+"timestamptz" = "time.Time"
+"varchar" = "string"
+"text" = "string"
+"boolean" = "bool"
+# from "github.com/satori/go.uuid"
+"uuid" = "uuid.UUID"
+"character varying" = "string"
+"character" = "string"
+"integer" = "int"
+"int4" = "int32"
+"numeric" = "float64"
+# from "github.com/lib/pq/hstore"
+"hstore" = "hstore.Hstore"
+# note that the package name here has to be kept in sync with the RootPkg above.
+"jsonb" = "gnorm.Jsonb"
+# the package name here needs to be kept in sync with the enum template's package name
+"book_type" = "enum.BookType"
+# This was previously mapped as sql.RawBytes, but there were memory ownership issues as a result,
+# i.e. attempting to reuse a value (or select more than one result) caused a given slice to be overwritten.
+# The string type mitigates this by forcing a copy when assigning to it, unlike []byte / sql.RawBytes.
+"bytea" = "string"
+
+
+[NullableTypeMap]
+"timestamp with time zone" = "pq.NullTime"
+"text" = "sql.NullString"
+"boolean" = "sql.NullBool"
+"uuid" = "uuid.NullUUID"
+"character varying" = "sql.NullString"
+"character" = "sql.NullString"
+"integer" = "sql.NullInt64"
+"numeric" = "sql.NullFloat64"
+"hstore" = "hstore.Hstore"
+# note that the package name here has to be kept in sync with the RootPkg above.
+"jsonb" = "gnorm.Jsonb"

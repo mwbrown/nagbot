@@ -4,7 +4,7 @@
 all: build
 
 build:
-	go build -v -o ./bin/nagbot ./cmd/nagbot 
+	go build -v -o ./bin/nagbot ./cmd/nagbot
 
 clean:
 	rm -r bin

@@ -1,0 +1,125 @@
+
+syntax = "proto3";
+
+package nbproto;
+
+import "google/protobuf/timestamp.proto";
+
+// Defines an individual Todo task, of which multiple instances
+// can exist.
+message TaskDefinition {
+    uint32 id = 1;   // Primary key.
+    string desc = 2; // String description of each task.
+}
+
+// TODO: decide if this is the right approach to use separate ID spaces
+// for groups and users, or allow them to overlap.
+message OwnerInfo {
+    uint32 id = 1;
+
+    enum OwnerType {
+        NONE = 0;
+        USER = 1;
+        GROUP = 2;
+    }
+
+    OwnerType type = 2;
+}
+
+message ScheduleInfo {
+}
+
+message TaskSchedule {
+    uint32 id = 1;
+    uint32 task_id = 2;
+    OwnerInfo owner = 3;
+    ScheduleInfo schedule = 4;
+    google.protobuf.Timestamp next_due = 5;
+}
+
+// Instance of a task, tied to an owner (group or user)
+message TaskInstance {
+    uint32 id = 1;      // Primary key.
+    uint32 task_id = 2; // Foreign key on TaskDefinition.
+    OwnerInfo owner = 3;
+}
+
+//
+// GRPC Definitions
+//
+
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string token = 1;
+}
+
+message LogoutRequest {
+
+}
+
+message LogoutResponse {
+
+}
+
+// This message is mainly for debugging purposes.
+message CheckLoginRequest {
+    
+}
+
+message CheckLoginResponse {
+    
+}
+
+message AddTaskDefRequest {
+
+}
+
+message AddTaskDefResponse {
+
+}
+
+message DelTaskDefRequest {
+
+}
+
+message DelTaskDefResponse {
+
+}
+
+service Nagbot {
+
+    //
+    // Unauthenticated RPC
+    //
+
+    rpc Login(LoginRequest) returns (LoginResponse) {
+
+    }
+
+    //
+    // Authenticated RPC
+    //
+
+    rpc Logout(LogoutRequest) returns (LogoutResponse) {
+
+    }
+
+    rpc AddTaskDef(AddTaskDefRequest) returns (AddTaskDefResponse) {
+
+    }
+
+    rpc DelTaskDef(DelTaskDefRequest) returns (DelTaskDefResponse) {
+        
+    }
+
+    rpc CheckLogin(CheckLoginRequest) returns (CheckLoginResponse) {
+
+    }
+
+    // ??? stream task notifications
+
+}
