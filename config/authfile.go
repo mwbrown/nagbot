@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	InvalidTokenTypeError = errors.New("Token stored in Viper as incorrect type.")
-	BadBytesReaderError   = errors.New("Could not create reader for file data.")
+	TokenEmptyError     = errors.New("Token is blank.")
+	BadBytesReaderError = errors.New("Could not create reader for file data.")
 )
 
 func getConfigDir() (string, error) {
@@ -32,9 +32,9 @@ func getConfigFilename(baseDir string) string {
 // handler, to save the resulting token upon a successful login.
 func SaveAuthFile() error {
 
-	token, ok := viper.Get(CFG_KEY_RPC_TOKEN).(string)
-	if !ok {
-		return InvalidTokenTypeError
+	token := viper.GetString(CFG_KEY_RPC_TOKEN)
+	if len(token) == 0 {
+		return TokenEmptyError
 	}
 
 	// Build the JSON data to save to the config file.
