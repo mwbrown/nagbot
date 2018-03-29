@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/mwbrown/nagbot/auth"
 	"github.com/mwbrown/nagbot/client"
+	"github.com/mwbrown/nagbot/config"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var loginCmd = &cobra.Command{
@@ -60,7 +63,22 @@ func loginHandler(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	fmt.Println(token)
+	// Sanity check the result.
+	if len(token) == 0 {
+		fmt.Println("Invalid token was received from the server.")
+		os.Exit(1)
+	}
+
+	fmt.Println("Login token received successfully.")
+
+	viper.Set(nbconfig.CFG_KEY_RPC_TOKEN, token)
+	err = auth.SaveToFile()
+	if err != nil {
+		fmt.Println("Could not save login token:", err)
+		os.Exit(1)
+	}
+
+	fmt.Println("Successfully logged in as", user)
 }
 
 func logoutHandler(cmd *cobra.Command, args []string) {
