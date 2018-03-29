@@ -9,7 +9,7 @@ import (
 	"github.com/vito/go-interact/interact"
 
 	// Importing config at the root also initializes Viper defaults.
-	_ "github.com/mwbrown/nagbot/config"
+	"github.com/mwbrown/nagbot/config"
 )
 
 var rootCmd = &cobra.Command{
@@ -32,6 +32,9 @@ func init() {
 
 	// Ignore any errors if a file cannot be found.
 	viper.ReadInConfig()
+
+	// Attempt to read in the auth file if it exists.
+	nbconfig.LoadAuthFile()
 }
 
 func main() {

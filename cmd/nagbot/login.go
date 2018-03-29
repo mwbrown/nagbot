@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mwbrown/nagbot/auth"
 	"github.com/mwbrown/nagbot/client"
 	"github.com/mwbrown/nagbot/config"
 
@@ -72,7 +71,7 @@ func loginHandler(cmd *cobra.Command, args []string) {
 	fmt.Println("Login token received successfully.")
 
 	viper.Set(nbconfig.CFG_KEY_RPC_TOKEN, token)
-	err = auth.SaveToFile()
+	err = nbconfig.SaveAuthFile()
 	if err != nil {
 		fmt.Println("Could not save login token:", err)
 		os.Exit(1)
