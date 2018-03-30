@@ -57,6 +57,8 @@ RootImport = "github.com/mwbrown/nagbot/db/nbsql"
 # i.e. attempting to reuse a value (or select more than one result) caused a given slice to be overwritten.
 # The string type mitigates this by forcing a copy when assigning to it, unlike []byte / sql.RawBytes.
 "bytea" = "string"
+"sched_type" = "int"
+"bigint" = "int64"
 
 
 [NullableTypeMap]

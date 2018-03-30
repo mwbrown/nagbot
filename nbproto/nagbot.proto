@@ -3,22 +3,13 @@ syntax = "proto3";
 
 package nbproto;
 
-import "google/protobuf/timestamp.proto";
-
-// Defines an individual Todo task, of which multiple instances
-// can exist.
-message TaskDefinition {
-    uint32 id = 1;   // Primary key.
-    string desc = 2; // String description of each task.
-}
-
 // TODO: decide if this is the right approach to use separate ID spaces
 // for groups and users, or allow them to overlap.
 message OwnerInfo {
     uint32 id = 1;
 
     enum OwnerType {
-        NONE = 0;
+        UNKNOWN = 0; // Invalid value.
         USER = 1;
         GROUP = 2;
     }
@@ -26,15 +17,47 @@ message OwnerInfo {
     OwnerType type = 2;
 }
 
-message ScheduleInfo {
+// Defines an individual Todo task, of which multiple instances
+// can exist.
+message TaskDefinition {
+    uint32 id = 1;   // Primary key.
+    string desc = 2; // String description of each task.
+    OwnerInfo owner = 3;
 }
 
 message TaskSchedule {
     uint32 id = 1;
     uint32 task_id = 2;
     OwnerInfo owner = 3;
+
+    message ScheduleInfo {
+        enum ScheduleType {
+            UNKNOWN = 0;       // Invalid value.
+            ONESHOT = 1;       // Fires once, updates IsActive to false.
+            INTERVAL = 2;      // Time-only interval.
+            WEEKLY = 3;        // Monday, Tuesday, etc
+            MONTH_DAY = 4;     // Monthly, <day> of each month
+            MONTH_WEEKDAY = 5; // Monthly, <nth> <weekday>
+            ANNUAL = 6;        // Specific day (<day> of <month>)
+        }
+
+        ScheduleType type = 1;
+
+        // This controls whether a more advanced match will occur if the date
+        // in question does not exist in a given month. For instance, Feb 29th
+        // is not guaranteed to happen, so if exact_only is false, normally the
+        // event would be generated once Mar 1st occurs. If exact_only is true,
+        // the event would be skipped every year except leap years.
+        bool exact_only = 2; 
+
+        // Various optional members to control timing information.
+        uint32 time = 3;    // Used in all types.
+        uint32 weekday = 4; // Used only for month_weekday.
+    }
+
     ScheduleInfo schedule = 4;
-    google.protobuf.Timestamp next_due = 5;
+    uint64 next_due = 5;
+    bool is_active = 6;
 }
 
 // Instance of a task, tied to an owner (group or user)
