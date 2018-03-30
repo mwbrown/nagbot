@@ -2,8 +2,6 @@
 -- First version password storage:
 -- ps_hash = SHA256(password .. pw_salt)
 
-CREATE DOMAIN bytes32 AS BYTEA CHECK(OCTET_LENGTH(VALUE) = 32);
-
 CREATE TYPE sched_type AS ENUM (
     'oneshot',
     'interval',
