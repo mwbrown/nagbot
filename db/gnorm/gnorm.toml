@@ -50,14 +50,12 @@ RootImport = "github.com/mwbrown/nagbot/db/nbsql"
 # from "github.com/lib/pq/hstore"
 "hstore" = "hstore.Hstore"
 # note that the package name here has to be kept in sync with the RootPkg above.
-"jsonb" = "gnorm.Jsonb"
-# the package name here needs to be kept in sync with the enum template's package name
-"book_type" = "enum.BookType"
+"jsonb" = "nbsql.Jsonb"
 # This was previously mapped as sql.RawBytes, but there were memory ownership issues as a result,
 # i.e. attempting to reuse a value (or select more than one result) caused a given slice to be overwritten.
 # The string type mitigates this by forcing a copy when assigning to it, unlike []byte / sql.RawBytes.
 "bytea" = "string"
-"sched_type" = "int"
+"sched_type" = "enum.SchedType"
 "bigint" = "int64"
 
 
@@ -72,4 +70,4 @@ RootImport = "github.com/mwbrown/nagbot/db/nbsql"
 "numeric" = "sql.NullFloat64"
 "hstore" = "hstore.Hstore"
 # note that the package name here has to be kept in sync with the RootPkg above.
-"jsonb" = "gnorm.Jsonb"
+"jsonb" = "nbsql.Jsonb"

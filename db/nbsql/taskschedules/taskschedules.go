@@ -6,20 +6,21 @@ import (
 	"database/sql"
 
 	"github.com/mwbrown/nagbot/db/nbsql"
+	"github.com/mwbrown/nagbot/db/nbsql/enum"
 	"github.com/pkg/errors"
 )
 
 // Row represents a row from 'task_schedules'.
 type Row struct {
-	ID           int           // id (PK)
-	TaskID       int           // task_id
-	OwnerID      int           // owner_id
-	Type         int           // type
-	ExactOnly    bool          // exact_only
-	SchedTime    int           // sched_time
-	SchedWeekday sql.NullInt64 // sched_weekday
-	NextDue      int64         // next_due
-	IsActive     bool          // is_active
+	ID           int            // id (PK)
+	TaskID       int            // task_id
+	OwnerID      int            // owner_id
+	Type         enum.SchedType // type
+	ExactOnly    bool           // exact_only
+	SchedTime    int            // sched_time
+	SchedWeekday sql.NullInt64  // sched_weekday
+	NextDue      int64          // next_due
+	IsActive     bool           // is_active
 }
 
 // Field values for every column in TaskSchedules.
@@ -27,7 +28,7 @@ var (
 	IDCol           nbsql.IntField          = "id"
 	TaskIDCol       nbsql.IntField          = "task_id"
 	OwnerIDCol      nbsql.IntField          = "owner_id"
-	TypeCol         nbsql.IntField          = "type"
+	TypeCol         enum.SchedTypeField     = "type"
 	ExactOnlyCol    nbsql.BoolField         = "exact_only"
 	SchedTimeCol    nbsql.IntField          = "sched_time"
 	SchedWeekdayCol nbsql.SqlNullInt64Field = "sched_weekday"

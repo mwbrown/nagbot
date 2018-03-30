@@ -28,7 +28,27 @@ const (
 	AnnualSchedType SchedType = 6
 )
 
-// String returns the string value of the SchedType.
+// DBString returns the DB string value of the SchedType.
+func (e SchedType) DBString() string {
+	switch e {
+	case OneshotSchedType:
+		return "oneshot"
+	case IntervalSchedType:
+		return "interval"
+	case WeeklySchedType:
+		return "weekly"
+	case MonthDaySchedType:
+		return "month_day"
+	case MonthWeekdaySchedType:
+		return "month_weekday"
+	case AnnualSchedType:
+		return "annual"
+	default:
+		return "UnknownSchedType"
+	}
+}
+
+// String returns the friendly string value of the SchedType.
 func (e SchedType) String() string {
 	switch e {
 	case OneshotSchedType:
@@ -50,7 +70,7 @@ func (e SchedType) String() string {
 
 // MarshalText marshals SchedType into text.
 func (e SchedType) MarshalText() ([]byte, error) {
-	return []byte(e.String()), nil
+	return []byte(e.DBString()), nil
 }
 
 // UnmarshalText unmarshals SchedType from text.
@@ -67,17 +87,17 @@ func (e *SchedType) UnmarshalText(text []byte) error {
 // stringified value of SchedType.
 func ParseSchedType(s string) (SchedType, error) {
 	switch s {
-	case "Oneshot":
+	case "oneshot":
 		return OneshotSchedType, nil
-	case "Interval":
+	case "interval":
 		return IntervalSchedType, nil
-	case "Weekly":
+	case "weekly":
 		return WeeklySchedType, nil
-	case "MonthDay":
+	case "month_day":
 		return MonthDaySchedType, nil
-	case "MonthWeekday":
+	case "month_weekday":
 		return MonthWeekdaySchedType, nil
-	case "Annual":
+	case "annual":
 		return AnnualSchedType, nil
 	default:
 		return UnknownSchedType, errors.New("invalid SchedType")
@@ -86,7 +106,7 @@ func ParseSchedType(s string) (SchedType, error) {
 
 // Value satisfies the sql/driver.Valuer interface for SchedType.
 func (e SchedType) Value() (driver.Value, error) {
-	return e.String(), nil
+	return e.DBString(), nil
 }
 
 // Scan satisfies the database/sql.Scanner interface for SchedType.

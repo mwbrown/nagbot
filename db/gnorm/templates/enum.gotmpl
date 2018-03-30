@@ -12,14 +12,27 @@ import "{{.Params.RootImport}}"
 type {{ $type }} uint16
 
 const (
-    // Unknown{{$type}} defines an invalid {{$type}}. 
-    Unknown{{$type}} {{$type}} = 0
+	// Unknown{{$type}} defines an invalid {{$type}}. 
+	Unknown{{$type}} {{$type}} = 0
 {{- range .Enum.Values }}
 	{{ .Name }}{{ $type }} {{$type}} = {{ .Value }}
 {{ end -}}
 )
 
-// String returns the string value of the {{ $type }}.
+// DBString returns the DB string value of the {{ $type }}.
+func (e {{ $type }}) DBString() string {
+	switch e {
+{{- range .Enum.Values }}
+	case {{ .Name }}{{ $type }}:
+		return "{{ .DBName }}"
+{{- end }}
+	default:
+		return "Unknown{{$type}}"
+	}
+}
+
+
+// String returns the friendly string value of the {{ $type }}.
 func (e {{ $type }}) String() string {
 	switch e {
 {{- range .Enum.Values }}
@@ -27,23 +40,23 @@ func (e {{ $type }}) String() string {
 		return "{{ .Name }}"
 {{- end }}
 	default:
-    	return "Unknown{{$type}}"
-    }
+		return "Unknown{{$type}}"
+	}
 }
 
 // MarshalText marshals {{ $type }} into text.
 func (e {{ $type }}) MarshalText() ([]byte, error) {
-	return []byte(e.String()), nil
+	return []byte(e.DBString()), nil
 }
 
 // UnmarshalText unmarshals {{ $type }} from text.
 func (e *{{ $type }}) UnmarshalText(text []byte) error {
-    val, err := Parse{{$type}}(string(text))
-    if err != nil {
-        return err
-    }
-    *e = val
-    return nil
+	val, err := Parse{{$type}}(string(text))
+	if err != nil {
+		return err
+	}
+	*e = val
+	return nil
 }
 
 // Parse{{$type}} converts s into a {{$type}} if it is a valid
@@ -51,7 +64,7 @@ func (e *{{ $type }}) UnmarshalText(text []byte) error {
 func Parse{{$type}}(s string) ({{$type}}, error) {
 	switch s {
 {{- range .Enum.Values }}
-	case "{{ .Name }}":
+	case "{{ .DBName }}":
 		return {{ .Name }}{{ $type }}, nil
 {{- end }}
 	default:
@@ -61,7 +74,7 @@ func Parse{{$type}}(s string) ({{$type}}, error) {
 
 // Value satisfies the sql/driver.Valuer interface for {{ $type }}.
 func (e {{ $type }}) Value() (driver.Value, error) {
-	return e.String(), nil
+	return e.DBString(), nil
 }
 
 // Scan satisfies the database/sql.Scanner interface for {{ $type }}.
