@@ -45,12 +45,12 @@ func SaveAuthFile() error {
 		return err
 	}
 
-	// Create the config directory if it doesn't exist.
 	confdir, err := getConfigDir()
 	if err != nil {
 		return err
 	}
 
+	// Create the config directory if it doesn't exist.
 	err = os.MkdirAll(confdir, 0700)
 	if err != nil {
 		return err
