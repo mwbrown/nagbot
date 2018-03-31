@@ -1,0 +1,2 @@
+ndb/nbsql/* linguist-generated=true
+*.pb.go linguist-generated=true
