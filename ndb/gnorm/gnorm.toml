@@ -22,7 +22,7 @@ StaticDir = ""
 RootPkg = "nbsql"
 
 # RootImport is the import path for the output directory.
-RootImport = "github.com/mwbrown/nagbot/db/nbsql"
+RootImport = "github.com/mwbrown/nagbot/ndb/nbsql"
 
 [SchemaPaths]
 "fields.go" = "templates/fields.gotmpl"

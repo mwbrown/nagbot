@@ -15,11 +15,11 @@ import (
 
 	"github.com/mwbrown/nagbot/auth"
 	"github.com/mwbrown/nagbot/config"
-	"github.com/mwbrown/nagbot/db"
-	"github.com/mwbrown/nagbot/db/nbsql"
-	"github.com/mwbrown/nagbot/db/nbsql/config"
-	"github.com/mwbrown/nagbot/db/nbsql/users"
 	"github.com/mwbrown/nagbot/nbproto"
+	"github.com/mwbrown/nagbot/ndb"
+	"github.com/mwbrown/nagbot/ndb/nbsql"
+	"github.com/mwbrown/nagbot/ndb/nbsql/config"
+	"github.com/mwbrown/nagbot/ndb/nbsql/users"
 )
 
 var (

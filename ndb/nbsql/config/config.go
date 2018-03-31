@@ -3,7 +3,7 @@
 package nbsql_config
 
 import (
-	"github.com/mwbrown/nagbot/db/nbsql"
+	"github.com/mwbrown/nagbot/ndb/nbsql"
 	"github.com/pkg/errors"
 )
 

@@ -6,7 +6,7 @@ import (
 	"database/sql/driver"
 	"errors"
 
-	"github.com/mwbrown/nagbot/db/nbsql"
+	"github.com/mwbrown/nagbot/ndb/nbsql"
 )
 
 // SchedType is the 'sched_type' enum type from schema 'Public'.

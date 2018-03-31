@@ -5,8 +5,8 @@ package nbsql_taskschedules
 import (
 	"database/sql"
 
-	"github.com/mwbrown/nagbot/db/nbsql"
-	"github.com/mwbrown/nagbot/db/nbsql/enum"
+	"github.com/mwbrown/nagbot/ndb/nbsql"
+	"github.com/mwbrown/nagbot/ndb/nbsql/enum"
 	"github.com/pkg/errors"
 )
 

@@ -13,7 +13,7 @@ import (
 	_ "github.com/lib/pq"
 
 	"github.com/mwbrown/nagbot/config"
-	"github.com/mwbrown/nagbot/db/nbsql"
+	"github.com/mwbrown/nagbot/ndb/nbsql"
 
 	"github.com/gobuffalo/packr"
 	"github.com/hashicorp/go-multierror"
@@ -88,7 +88,7 @@ func makeConnStr() string {
 func NewSchemaLoader() (*SchemaLoader, error) {
 	sl := &SchemaLoader{}
 
-	sl.schemaBox = packr.NewBox("../schema")
+	sl.schemaBox = packr.NewBox("./schema")
 
 	return sl, nil
 }

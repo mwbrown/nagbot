@@ -5,9 +5,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/mwbrown/nagbot/db/nbsql"
-	"github.com/mwbrown/nagbot/db/nbsql/users"
 	"github.com/mwbrown/nagbot/nbproto"
+	"github.com/mwbrown/nagbot/ndb/nbsql"
+	"github.com/mwbrown/nagbot/ndb/nbsql/users"
 
 	"github.com/dgrijalva/jwt-go"
 

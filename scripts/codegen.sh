@@ -13,7 +13,7 @@ protoc -I . "$PB_SRCDIR/$PB_SRC" --go_out=plugins=grpc:.
 
 if type gnorm 2>&1 > /dev/null; then
     echo "Generating GNORM code..."
-    (cd db/gnorm && gnorm gen)
+    (cd ndb/gnorm && gnorm gen)
 else
     echo "Skipping GNORM generation, command not found."
 fi

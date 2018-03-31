@@ -15,7 +15,7 @@ CREATE TABLE users(
     id SERIAL NOT NULL PRIMARY KEY,
     username VARCHAR(32) NOT NULL UNIQUE,
     pw_hash BYTEA NOT NULL CHECK(OCTET_LENGTH(pw_hash) = 32),
-    pw_salt BYTEA NOT NULL,
+    pw_salt BYTEA NOT NULL CHECK(OCTET_LENGTH(pw_salt) > 0),
     is_enabled BOOL NOT NULL,
     is_admin BOOL NOT NULL,
     min_sess_id INT NOT NULL DEFAULT 0,

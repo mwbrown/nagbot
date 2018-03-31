@@ -3,7 +3,7 @@
 package nbsql_groupusers
 
 import (
-	"github.com/mwbrown/nagbot/db/nbsql"
+	"github.com/mwbrown/nagbot/ndb/nbsql"
 	"github.com/pkg/errors"
 )
 
