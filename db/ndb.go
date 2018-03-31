@@ -3,7 +3,7 @@
 // with the GNORM-generated code.
 //
 
-package nbsql
+package ndb
 
 import (
 	"errors"
@@ -13,6 +13,7 @@ import (
 	_ "github.com/lib/pq"
 
 	"github.com/mwbrown/nagbot/config"
+	"github.com/mwbrown/nagbot/db/nbsql"
 
 	"github.com/gobuffalo/packr"
 	"github.com/hashicorp/go-multierror"
@@ -25,7 +26,7 @@ type SchemaLoader struct {
 
 // Open returns a connection object to a Nagbot database,
 // based on the configuration set in the application.
-func Open() (DB, error) {
+func Open() (nbsql.DB, error) {
 	connStr := makeConnStr()
 	return sql.Open("postgres", connStr)
 }

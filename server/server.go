@@ -15,6 +15,7 @@ import (
 
 	"github.com/mwbrown/nagbot/auth"
 	"github.com/mwbrown/nagbot/config"
+	"github.com/mwbrown/nagbot/db"
 	"github.com/mwbrown/nagbot/db/nbsql"
 	"github.com/mwbrown/nagbot/db/nbsql/config"
 	"github.com/mwbrown/nagbot/db/nbsql/users"
@@ -55,10 +56,10 @@ func checkDbVersion(db nbsql.DB) error {
 	}
 
 	ver := cfgRows[0].SchemaVer
-	if ver > nbsql.LATEST_SCHEMA_VERSION {
-		return fmt.Errorf("Database version (%d) is newer than server (%d). Server upgrade required.", ver, nbsql.LATEST_SCHEMA_VERSION)
-	} else if ver < nbsql.LATEST_SCHEMA_VERSION {
-		return fmt.Errorf("Database version (%d) is older than server (%d). Database upgrade required.", ver, nbsql.LATEST_SCHEMA_VERSION)
+	if ver > ndb.LATEST_SCHEMA_VERSION {
+		return fmt.Errorf("Database version (%d) is newer than server (%d). Server upgrade required.", ver, ndb.LATEST_SCHEMA_VERSION)
+	} else if ver < ndb.LATEST_SCHEMA_VERSION {
+		return fmt.Errorf("Database version (%d) is older than server (%d). Database upgrade required.", ver, ndb.LATEST_SCHEMA_VERSION)
 	}
 
 	return nil
@@ -181,7 +182,7 @@ func NewServer() (*NagbotServer, error) {
 		return nil, err.ErrorOrNil()
 	}
 
-	db, e := nbsql.Open()
+	db, e := ndb.Open()
 	if e != nil {
 		return nil, e
 	}

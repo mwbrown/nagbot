@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/mwbrown/nagbot/auth"
-	"github.com/mwbrown/nagbot/db/nbsql"
+	"github.com/mwbrown/nagbot/db"
 	"github.com/mwbrown/nagbot/db/nbsql/config"
 	"github.com/mwbrown/nagbot/db/nbsql/users"
 
@@ -40,7 +40,7 @@ func init() {
 func verifyDbOptions(exitOnError bool) error {
 
 	fmt.Println("Checking DB configuration...")
-	e := nbsql.VerifyDbOptions()
+	e := ndb.VerifyDbOptions()
 
 	if e != nil {
 
@@ -67,7 +67,7 @@ func dbInitHandler(cmd *cobra.Command, args []string) {
 		panic(err)
 	}
 
-	db, err := nbsql.Open()
+	db, err := ndb.Open()
 	if err != nil {
 		fmt.Println("Could not open database connection:", err)
 	}
@@ -85,7 +85,7 @@ func dbInitHandler(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	loader, err := nbsql.NewSchemaLoader()
+	loader, err := ndb.NewSchemaLoader()
 	if err != nil {
 		fmt.Println("Could not load schema information:", err)
 		os.Exit(1)
@@ -112,8 +112,8 @@ func dbInitHandler(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	fmt.Printf("Creating initial schema (version %d)\n", nbsql.LATEST_SCHEMA_VERSION)
-	schemaScript, err := loader.GetSchemaInitScript(nbsql.LATEST_SCHEMA_VERSION)
+	fmt.Printf("Creating initial schema (version %d)\n", ndb.LATEST_SCHEMA_VERSION)
+	schemaScript, err := loader.GetSchemaInitScript(ndb.LATEST_SCHEMA_VERSION)
 
 	_, err = db.Query(schemaScript)
 	if err != nil {
@@ -163,7 +163,7 @@ func dbUpgradeHandler(cmd *cobra.Command, args []string) {
 
 	var currSchema int
 
-	db, err := nbsql.Open()
+	db, err := ndb.Open()
 	if err != nil {
 		panic(err)
 	}
@@ -181,22 +181,22 @@ func dbUpgradeHandler(cmd *cobra.Command, args []string) {
 	}
 
 	currSchema = configRows[0].SchemaVer
-	fmt.Println("Tool schema version: ", nbsql.LATEST_SCHEMA_VERSION)
+	fmt.Println("Tool schema version: ", ndb.LATEST_SCHEMA_VERSION)
 	fmt.Println("Remote DB schema:    ", currSchema)
 
-	if currSchema >= nbsql.LATEST_SCHEMA_VERSION {
+	if currSchema >= ndb.LATEST_SCHEMA_VERSION {
 		fmt.Println("Skipping upgrade, database is already at latest or newer.")
 		os.Exit(0) // FIXME: Is this an appropriate exit for an up-to-date database?
 	}
 
-	loader, err := nbsql.NewSchemaLoader()
+	loader, err := ndb.NewSchemaLoader()
 	if err != nil {
 		fmt.Println("Could not load schema information:", err)
 		os.Exit(1)
 	}
 
 	// Perform incremental migration scripts until at the latest version.
-	for currSchema < nbsql.LATEST_SCHEMA_VERSION {
+	for currSchema < ndb.LATEST_SCHEMA_VERSION {
 		nextSchema := currSchema + 1
 
 		fmt.Printf("Attempting schema upgrade from %d to %d...", currSchema, nextSchema)
