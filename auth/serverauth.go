@@ -36,6 +36,7 @@ var (
 	TokenClaimsMissingError = errors.New("Required claims are not present.")
 	TokenClaimsInvalidError = errors.New("Claims did not validate properly.")
 	TokenClaimsTypeError    = errors.New("Claim(s) are not correct type.")
+	TokenRevokedError       = errors.New("Token has a revoked session id.")
 	NoSuchUserError         = errors.New("User not found in database.")
 	NoSecretKeyError        = errors.New("Secret key was not provided.")
 )
@@ -144,6 +145,11 @@ func (auth *Authenticator) RequireAuth(ctx context.Context) (u *nbsql_users.Row,
 	user := getUserById(claims.UserId, db)
 	if user == nil {
 		return nil, NoSuchUserError
+	}
+
+	// Check the current session count.
+	if claims.SessId < user.MinSessID {
+		return nil, TokenRevokedError
 	}
 
 	return user, nil

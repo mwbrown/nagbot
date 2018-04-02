@@ -23,9 +23,11 @@ import (
 )
 
 var (
+	// Errors that should be returned to the user.
 	NotImplementedError = errors.New("Not Implemented")
 	AuthenticationError = errors.New("Not Authorized")
 	LoginRejectedError  = errors.New("Login rejected.")
+	InternalServerError = errors.New("Internal server error.")
 
 	// Server configuration errors
 	ServerAddrMissingError   = errors.New("Server listen address not set.")
@@ -115,6 +117,7 @@ func (nb *NagbotServer) Login(ctx context.Context, req *nbproto.LoginRequest) (*
 	err = nbsql_users.Update(nb.db, user)
 	if err != nil {
 		log.Printf("Error updating user session ID: %v", err)
+		return nil, InternalServerError
 	}
 
 	log.Printf("Created login token for %s, id=%d", req.Username, sessId)
@@ -130,7 +133,18 @@ func (nb *NagbotServer) Logout(ctx context.Context, req *nbproto.LogoutRequest) 
 	}
 
 	log.Printf("Logout request for user %d (%s)\n", user.ID, user.Username)
-	return nil, NotImplementedError
+
+	// Invalidate all existing sessions.
+	// TBD: Implement individual session cancellation? Requires some DB changes to cache individual sessions.
+	user.MinSessID = user.NextSessID
+	err = nbsql_users.Update(nb.db, user)
+
+	if err != nil {
+		log.Printf("Error updating user row: %v", err)
+		return nil, InternalServerError
+	}
+
+	return &nbproto.LogoutResponse{}, nil
 }
 
 func (nb *NagbotServer) CheckLogin(ctx context.Context, req *nbproto.CheckLoginRequest) (*nbproto.CheckLoginResponse, error) {

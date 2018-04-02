@@ -87,7 +87,10 @@ func logoutHandler(cmd *cobra.Command, args []string) {
 	err := c.Logout()
 	if err != nil {
 		fmt.Println("Error logging out:", err)
+		os.Exit(1)
 	}
+
+	fmt.Println("Logged out successfully.")
 }
 
 func checkLoginHandler(cmd *cobra.Command, args []string) {
